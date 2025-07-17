@@ -1,0 +1,4 @@
+v 3
+d Yunhan Liu (maintainer)
+d https://github.com/liu-yunhan/csdidjack
+p csdidjack Post-estimation CV3 inference for Callaway–Sant’Anna DID estimator
