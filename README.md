@@ -15,15 +15,15 @@ help csdidjack
 
 ## Optional
 
-### Removal 
+#### Removal 
 ```stata
 ado uninstall csdidjack
 ```
-### Install to a custom directory
+#### Install to a custom directory
 ```stata
 sysdir set PLUS …
 ```
-### Add ado directory
+#### Add ado directory
 ```stata
-adopath ++
+adopath ++ …
 ```
