@@ -4,52 +4,63 @@
 {title:csdidjack}
 
 {p 4 4 2}
-{bf:csdidjack} — Cluster jackknife (CV3) inference after {bf:csdid}
+{bf:csdidjack} — Cluster jackknife (CV3) inference for {bf:csdid}
 
 {title:Syntax}
 
 {p 8 8 2}
-{cmd:csdidjack} [{cmd:,} {it:cluster(varname)} {opt level(#)}]
+{cmd:csdidjack}{cmd: [,} {opt cluster(varname)} {opt level(#)}{cmd:]}
 
-{synoptset 16 tabbed}{...}
+{synoptset 20 tabbed}{...}
 {synopthdr}
 {synoptline}
-{synopt:{opt cluster(varname)}}cluster variable used in the preceding {cmd:csdid}; defaults to {cmd:e(cluster)}{p_end}
-{synopt:{opt level(#)}}confidence level for the CV3 interval; default {cmd:level(95)}{p_end}
+{synopt:{opt cluster(varname)}}cluster variable used; defaults to {cmd:e(cluster)}{p_end}
+{synopt:{opt level(#)}}confidence level for the interval; defaults to {cmd:95}{p_end}
 {synoptline}
 
 {title:Description}
 
 {pstd}
 {cmd:csdidjack} implements the cluster jackknife (CV3) variance estimator for the
-Callaway–Sant’Anna Difference‑in‑Differences estimator produced by {cmd:csdid}.  
-It provides finite‑sample adjusted inference that is robust to few clusters and
-heterogeneous treatment timing.  Run it immediately after a successful
-{cmd:csdid} estimation.
+Callaway–Sant’Anna Difference-in-Differences estimator produced by {cmd:csdid}.  
+It provides finite-sample adjusted inference that is robust to few clusters and
+heterogeneous treatment timing.  {break}
+
+{pstd}**A cluster variable must be supplied either in the original {cmd:csdid} call or via the {opt cluster()} option here. {break} Currently supports only the aggregation schemes {cmd:agg(simple)}, {cmd:agg(group)}, and {cmd:agg(calendar)} **  {break}
+
+{pstd}Run immediately after a successful {cmd:csdid} estimation.
+
+
 
 {title:Stored results}
 
-{pstd}{bf:r(table)} (1 × 8) with elements  
-{bf:b  cv3se  cv3t  cv3p  cv3lci  cv3uci  cv3df  cv3crit}
+{p2colset 7 30 32 2}
+{pstd}{it:Matrices:}{p_end}{break}
+{p2col:{bf:r(table)}}Column vector with estimation results{p_end}
+{p2col:{bf:r(atts)}}All ATTs from the leave-one-out procedure{p_end}
 
-{col 8}{bf:r()} scalars
-{col 12}{bf:ATT}      average treatment effect
-{col 12}{bf:cv3se}    CV3 standard error
-{col 12}{bf:cv3t}     t‑statistic
-{col 12}{bf:cv3p}     p‑value
-{col 12}{bf:cv3df}    degrees of freedom
-{col 12}{bf:cv3crit}  critical value at specified level
+{pstd}{it:Scalars:}{p_end}{break}
+{p2col:{bf:r(ATT)}}Coefficient result (from csdid){p_end}
+{p2col:{bf:r(cv3se)}}Cluster-jackknife standard error{p_end}
+{p2col:{bf:r(cv3t)}}t-statistic{p_end}
+{p2col:{bf:r(cv3p)}}p-value{p_end}
+{p2col:{bf:r(cv3lci)}}Lower bound{p_end}
+{p2col:{bf:r(cv3uci)}}Upper bound{p_end}
+{p2colreset}
 
 {title:Example}
 
-{phang2}{cmd:. csdid y, ivar(id) time(t) group(g) cluster(state)}
-{phang2}{cmd:. csdidjack}
+{phang}{cmd:csdid wage, time(year) gvar(first_treat) cluster(state) agg(group)}{p_end}
+{phang}{cmd:csdidjack}{p_end}
 
-{title:Author}
+{marker authors}{...}
+{title:Authors}
 
-{pstd}Yunhan Liu  
-{pstd}{browse "mailto:max.yunhan.liu@gmail.com":max.yunhan.liu@gmail.com}
+{pstd}
+Yunhan Liu: {browse "mailto:max.yunhan.liu@gmail.com":max.yunhan.liu@gmail.com}{p_end}
 
-{title:Version}
+{title:Also see}
 
-{pstd}0.2.0  10 Jul 2025
+{pstd}
+Help:  {help csdid}, {help csdid postestimation}{p_end}
+
