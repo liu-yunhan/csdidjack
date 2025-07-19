@@ -1,6 +1,6 @@
 # csdidjack
 Cluster jackknife (CV3) inference for Callaway–Sant’Anna DID estimator  <br>
-This is a post-estimation program for csdid by Fernando Rios-Avila
+This is a post-estimation program for csdid (Fernando Rios-Avila)
 
 ## Installation 
 install (or update) using the following command
