@@ -1,4 +1,4 @@
-*! csdid_jack 0.3 10 Jul 2025 — Cluster jackknife (CV3) for Callaway–Sant'Anna DID
+*! csdid_jack 0.2.1 30 Jul 2025 — Cluster jackknife (CV3) for Callaway–Sant'Anna DID
 *  After running  csdid … , call:
 *      csdid_jack [, cluster(varname) level(#)]
 *  Returns r(atts), and r(table):
