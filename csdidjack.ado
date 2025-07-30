@@ -12,8 +12,8 @@ program define csdidjack, sortpreserve rclass
         di as err "{bf:csdidjack} must follow {bf:csdid}"
         exit 301
     }
-    if !inlist("`e(agg)'","simple","group","calendar") {
-        di as err "aggregation must be simple, group, or calendar"
+    if !inlist("`e(agg)'", "simple", "group", "calendar") {
+        di as err "must have simple, group, or calendar aggregation"
         exit 301
     }
 
@@ -23,7 +23,10 @@ program define csdidjack, sortpreserve rclass
     tempname orig
     qui estimates store `orig'
     if "`cluster'"=="" local cluster "`defclust'"
-    if "`cluster'"=="" error 198
+    if "`cluster'" == "" {
+		di as err "likely cluster() option missing — specify it in csdid or csdidjack"
+		error 198
+	}
     if "`level'"==""  local level 95
     scalar _level = `level'
 
