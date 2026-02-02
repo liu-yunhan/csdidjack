@@ -16,6 +16,13 @@ or try
 ado update csdidjack, update
 ```
 
+## Supported options
+| `csdid` | `hdidregress` + `estat aggregation, overall` |
+|---|---|
+| `agg(simple)` | `weights(timecohort)` |
+| `agg(group)` | `weights(cohort)` |
+| `agg(calendar)` |  |
+
 ## Documentation 
 ```stata
 help csdidjack
