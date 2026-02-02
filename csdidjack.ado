@@ -1,4 +1,4 @@
-*! csdid_jack 0.2.1 30 Jul 2025 — Cluster jackknife (CV3) for Callaway–Sant'Anna DID
+*! csdid_jack 0.5 1 Feb 2025 — Cluster jackknife (CV3) for Callaway–Sant'Anna DID
 *  After running  csdid … , call:
 *      csdid_jack [, cluster(varname) level(#)]
 *  Returns r(atts), and r(table):
@@ -8,14 +8,22 @@ cap program drop csdidjack
 program define csdidjack, sortpreserve rclass
 
     *--- 0. checks ---------------------------------------------------------
-    if "`e(cmd)'" != "csdid" {
-        di as err "{bf:csdidjack} must follow {bf:csdid}"
-        exit 301
+	if "`e(cmd)'" == "csdid" {
+		if !inlist("`e(agg)'", "simple", "group", "calendar") {
+			di as err "{cmd:csdid} must {cmd:agg()} by {cmd:simple}, {cmd:group}, or {cmd:calendar}"
+			exit 301
+		}
     }
-    if !inlist("`e(agg)'", "simple", "group", "calendar") {
-        di as err "must have simple, group, or calendar aggregation"
-        exit 301
+    else if "`e(cmd)'" == "hdidregress" {
+		if !inlist("`r(agg_type)'", "overall") {
+			di as err "{cmd:hdidregress} must {cmd:estat aggregation} by {cmd:overall} with {cmd:weights(timecohort)} or {cmd:weights(cohort)}"
+			exit 301
+		}
     }
+	else {
+		di as err "{cmd:csdidjack} must follow {cmd:csdid} or {cmd:hdidregress}"
+        exit 301
+	}
 
     *--- 1. options --------------------------------------------------------
     local defclust `e(clustvar)'
@@ -23,10 +31,7 @@ program define csdidjack, sortpreserve rclass
     tempname orig
     qui estimates store `orig'
     if "`cluster'"=="" local cluster "`defclust'"
-    if "`cluster'" == "" {
-		di as err "likely cluster() option missing — specify it in csdid or csdidjack"
-		error 198
-	}
+    if "`cluster'"=="" error 198
     if "`level'"==""  local level 95
     scalar _level = `level'
 
@@ -35,11 +40,20 @@ program define csdidjack, sortpreserve rclass
     local cmdline `"`e(cmdline)'"'
     gettoken cmdleft cmdright : cmdline, parse(",")
 
+	local estat_agg ""
+	if "`e(cmd)'" == "csdid" {
+		local group "`e(ggroup)'"
+    }
+    else if "`e(cmd)'" == "hdidregress" {
+		local group "`e(cohortvar)'"
+		local estat_agg "`r(weights)'"
+    }
+	
     preserve
-        collapse (sum) `e(ggroup)', by(`cluster')
+        collapse (sum) `group', by(`cluster')
         qui count
         local g = r(N)
-        qui count if `e(ggroup)' != 0
+        qui count if `group' != 0
         local treated = r(N)
     restore
     local singclust = (`treated' < 2)
@@ -53,14 +67,17 @@ program define csdidjack, sortpreserve rclass
     mata: df = `g' - 1 - `singclust'
     mata: atts = J(`reps',1,.)
     local sole ""
-    qui if `singclust' levelsof `cluster' if `e(ggroup)'!=0, local(sole)
-
+    qui if `singclust' levelsof `cluster' if `group'!=0, local(sole)
+	
     local j = 0
     foreach _c of local _clist {
         if "`_c'"=="`sole'" continue
         local j = `j' + 1
         noi di ".", _continue
         qui `cmdleft' if `cluster' != `_c' `cmdright'
+		if "`e(cmd)'" == "hdidregress" {
+			qui estat aggregation, overall weights(`estat_agg')
+		}
         local _att = r(table)[1,1]
 		mata: atts[`j',1] = `_att'
     }
@@ -87,7 +104,7 @@ program define csdidjack, sortpreserve rclass
     mata:   st_numscalar("cv3uci",uci)
     mata:   st_numscalar("cv3df",df)
     mata:   st_numscalar("cv3crit",crit)
-	mata:   st_matrix("atts", atts)
+	mata:	st_matrix("atts", atts)
 
     *--- 5. return ---------------------------------------------------------
     return matrix atts = atts
@@ -110,4 +127,5 @@ program define csdidjack, sortpreserve rclass
 	return sca cv3uci = cv3uci
 	
     qui estimates restore `orig'
+	
 end

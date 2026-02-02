@@ -4,7 +4,7 @@
 {title:csdidjack}
 
 {p 4 4 2}
-{bf:csdidjack} — Cluster jackknife (CV3) inference for {bf:csdid}
+{bf:csdidjack} — Cluster jackknife (CV3) inference for {cmd:csdid} and {cmd:hdidregress} + {cmd:estat aggregation, overall}
 
 {title:Syntax}
 
@@ -22,13 +22,13 @@
 
 {pstd}
 {cmd:csdidjack} implements the cluster jackknife (CV3) variance estimator for the
-Callaway–Sant’Anna Difference-in-Differences estimator produced by {cmd:csdid}.  
+Callaway–Sant’Anna Difference-in-Differences estimator produced by {cmd:csdid} or {cmd:hdidregress} + {cmd:estat aggregation, overall}.  
 It provides finite-sample adjusted inference that is robust to few clusters and
 heterogeneous treatment timing.  {break}
 
-{pstd}**A cluster variable must be supplied either in the original {cmd:csdid} call or via the {opt cluster()} option here. {break} Currently supports only the aggregation schemes {cmd:agg(simple)}, {cmd:agg(group)}, and {cmd:agg(calendar)} **  {break}
+{pstd}**A cluster variable must be supplied either in the original {cmd:csdid} or {cmd:hdidregress} call or via the {opt cluster()} option here. {break} Currently supports only: the aggregation schemes {cmd:agg(simple)}, {cmd:agg(group)}, and {cmd:agg(calendar)} for {cmd:csdid}; and {cmd:estat aggregation, overall} with {cmd:weights(timecohort)} or {cmd:weights(cohort)} for {cmd:hdidregress} **  {break}
 
-{pstd}Run immediately after a successful {cmd:csdid} estimation.
+{pstd}Run immediately after a successful {cmd:csdid} estimation or {cmd:hdidregress} + {cmd:estat aggregation, overall}.
 
 
 
@@ -40,7 +40,7 @@ heterogeneous treatment timing.  {break}
 {p2col:{bf:r(atts)}}All ATTs from the leave-one-out procedure{p_end}
 
 {pstd}{it:Scalars:}{p_end}{break}
-{p2col:{bf:r(ATT)}}Coefficient result (from csdid){p_end}
+{p2col:{bf:r(ATT)}}Coefficient result (from csdid or 'hdidregress' + 'estat aggregation, overall'){p_end}
 {p2col:{bf:r(cv3se)}}Cluster-jackknife standard error{p_end}
 {p2col:{bf:r(cv3t)}}t-statistic{p_end}
 {p2col:{bf:r(cv3p)}}p-value{p_end}
@@ -53,6 +53,10 @@ heterogeneous treatment timing.  {break}
 {phang}{cmd:csdid wage, time(year) gvar(first_treat) cluster(state) agg(group)}{p_end}
 {phang}{cmd:csdidjack}{p_end}
 
+{phang}{cmd:hdidregress aipw (log_wage_dm) (treat_post), group(state) time(year) vce(cluster state)}{p_end}
+{phang}{cmd:estat aggregation, overall}{p_end}
+{phang}{cmd:csdidjack}{p_end}
+
 {marker authors}{...}
 {title:Authors}
 
@@ -62,5 +66,5 @@ Yunhan Liu: {browse "mailto:max.yunhan.liu@gmail.com":max.yunhan.liu@gmail.com}{
 {title:Also see}
 
 {pstd}
-Help:  {help csdid}, {help csdid postestimation}{p_end}
+Help:  {help csdid}, {help csdid postestimation}, {help hdidregress}, {help estat aggregation}{p_end}
 
