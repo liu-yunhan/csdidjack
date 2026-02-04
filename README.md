@@ -22,6 +22,7 @@ ado update csdidjack, update
 | `agg(simple)` | `weights(timecohort)` |
 | `agg(group)` | `weights(cohort)` |
 | `agg(calendar)` |  |
+* the weights() option is availible in Stata 19 only
 
 ## Documentation 
 ```stata
