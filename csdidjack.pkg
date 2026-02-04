@@ -2,8 +2,8 @@ v 3
 d 'csdidjack': Post-estimation CV3 inference for Callaway–Sant’Anna DID estimator
 d
 d Author: Yunhan Liu <max.yunhan.liu@gmail.com>
-d Distribution-Date: 01Feb2026
-d Version: 0.5.0
+d Distribution-Date: 03Feb2026
+d Version: 0.5.1
 d
 d 'csdidjack' implements the cluster jackknife (CV3) variance estimator as a 
 d post-estimation command after running 'csdid' or 'hdidregress' + 'estat aggregation, overall'. It computes robust standard errors, 
