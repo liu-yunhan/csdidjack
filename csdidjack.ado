@@ -1,4 +1,4 @@
-*! csdid_jack 0.5.1 3 Feb 2025 — Cluster jackknife (CV3) for Callaway–Sant'Anna DID
+*! csdid_jack 0.5.2 May 22 2025 — Cluster jackknife (CV3) for Callaway–Sant'Anna DID
 *  After running  csdid … , call:
 *      csdid_jack [, cluster(varname) level(#)]
 *  Returns r(atts), and r(table):
@@ -40,6 +40,10 @@ program define csdidjack, sortpreserve rclass
     local cmdline `"`e(cmdline)'"'
     gettoken cmdleft cmdright : cmdline, parse(",")
 
+	if strpos(`"`cmdleft'"', "[") {
+		gettoken cmdleft wgt : cmdleft, parse("[")
+	}
+	
 	local estat_agg ""
 	if "`e(cmd)'" == "csdid" {
 		local group "`e(ggroup)'"
@@ -75,7 +79,7 @@ program define csdidjack, sortpreserve rclass
         if "`_c'"=="`sole'" continue
         local j = `j' + 1
         noi di ".", _continue
-        qui `cmdleft' if `cluster' != `_c' `cmdright'
+        qui `cmdleft' if `cluster' != `_c' `wgt' `cmdright'
 		if "`e(cmd)'" == "hdidregress" {
 			if "`estat_agg'" != "" {
 				qui estat aggregation, overall weights(`estat_agg')
