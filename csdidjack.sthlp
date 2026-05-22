@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 0.2.0  10Jul2025}
+{* *! version 0.5.2  22May2026}
 
 {title:csdidjack}
 
